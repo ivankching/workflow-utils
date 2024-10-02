@@ -18,5 +18,12 @@ dependencies = [
     "seaborn"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-runner",
+    "jupyter"
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
