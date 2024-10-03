@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "workflow-utils"
 authors = [
-    {name = "Ivan Ching", email = "ivan1335@gmai.com"}
+    {name = "Ivan Ching", email = "ivan1335@gmail.com"}
 ]
 version = "0.0.1"
 description = "Personal utility functions for common workflow tasks"
