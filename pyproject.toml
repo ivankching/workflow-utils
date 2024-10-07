@@ -16,7 +16,8 @@ dependencies = [
     "pandas",
     "matplotlib",
     "seaborn",
-    "scipy"
+    "scipy",
+    "statsmodels"
 ]
 
 [project.optional-dependencies]
