@@ -43,3 +43,10 @@ def countplots(data: pd.DataFrame, cols: int = 6, size: tuple = (16,20)):
     fig.tight_layout()
     plt.show()
     plt.close(fig)
+
+def correlation_heatmap(data):
+    """Return heatmap of pairwise correlations for all numeric features"""
+    data = data.select_dtypes(include=[np.int64, np.float64])
+    corr = data.corr()
+    heatmap = sns.heatmap(corr, cmap="YlGnBu", annot=True)
+    return heatmap
