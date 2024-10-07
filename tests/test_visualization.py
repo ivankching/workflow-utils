@@ -11,3 +11,8 @@ def test_kdes():
     data = sns.load_dataset('iris')
     _ = visualization.kdes(data)
     assert True
+
+def test_countplots():
+    data = sns.load_dataset('iris')
+    _ = visualization.countplots(data)
+    assert True
