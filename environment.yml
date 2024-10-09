@@ -1,0 +1,10 @@
+name: c:\Users\ivan1\projects\workflow-utils\.conda
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+prefix: c:\Users\ivan1\projects\workflow-utils\.conda
