@@ -86,3 +86,29 @@ def plot_proportions(data):
         ax.bar_label(rects, label_type='center', color=text_color)
     ax.legend(ncols=len(categories), bbox_to_anchor=(0, -.1), loc='lower left', fontsize='small')
     return fig, ax
+
+def labeled_lineplot(series, offset=0.3):
+    """
+    Plot a lineplot of a series with its values labeled on the
+    line. The labels are offset from the line by a specified
+    amount.
+
+    Parameters
+    ----------
+    series : pd.Series
+        Series to plot
+    offset : float, optional
+        Offset of the labels from the line. Default is 0.3.
+
+    Returns
+    -------
+    ax : matplotlib.axes.Axes
+        Axes object of the plot
+    """
+    ax = sns.lineplot(series)
+    for x, y in zip(series.index, series):
+        plt.text(x=x,
+                y=y-offset,
+                s='{:.1f}'.format(y),
+                color='purple')
+    return ax
