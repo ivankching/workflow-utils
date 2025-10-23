@@ -50,3 +50,39 @@ def correlation_heatmap(data):
     corr = data.corr()
     heatmap = sns.heatmap(corr, cmap="YlGnBu", annot=True)
     return heatmap
+
+def plot_proportions(data):
+    """
+    Plot stacked horizontal bars of categories over years, with
+    each bar colored according to its category.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Dataframe with years as index and categories as columns
+        whose values are the proportions of each category in each year
+
+    Returns
+    -------
+    fig, ax : matplotlib.figure.Figure, matplotlib.axes.Axes
+        Figure and Axes objects of the plot
+    """
+    data = data.round(1)
+    years = data.index
+    categories = data.columns
+    data_cum = data.cumsum(axis=1)
+    category_colors = plt.colormaps["RdYlGn"](np.linspace(0.15, 0.85, data.shape[1]))
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.invert_yaxis()
+    ax.xaxis.set_visible(False)
+    ax.set_xlim(0, np.sum(data, axis=1).max())
+
+    for colname, color in zip(categories, category_colors):
+        widths = data[colname]
+        starts = data_cum[colname] - widths
+        rects = ax.barh(years, widths, left=starts, height=0.5, label=colname, color=color)
+        r, g, b, _ = color
+        text_color = 'white' if r * g * b < 0.5 else 'darkgrey'
+        ax.bar_label(rects, label_type='center', color=text_color)
+    ax.legend(ncols=len(categories), bbox_to_anchor=(0, -.1), loc='lower left', fontsize='small')
+    return fig, ax
