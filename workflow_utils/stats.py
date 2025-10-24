@@ -29,7 +29,8 @@ def vif(data, exclude=None):
     vif_data = vif_data.sort_values(by="VIF", ascending=False)
     return vif_data
 
-def kstest(data, label, columns='numeric'):
+
+def kstests(data, label, selected_columns='numeric'):
     """
     Calculate the Kolmogorov-Smirnov test statistic and p-value for each
     feature in the dataset.
@@ -40,7 +41,7 @@ def kstest(data, label, columns='numeric'):
         The dataset to calculate the test statistic and p-value for.
     label : str
         The label to split the data into two groups [0, 1].
-    columns : list or str, optional
+    selected_columns : list or str, optional
         Either 'numeric' to select all numeric features, or a list of
         feature names to select.
 
@@ -50,17 +51,22 @@ def kstest(data, label, columns='numeric'):
         A DataFrame containing the test statistic and p-value for each
         feature in the dataset.
     """
-    if columns is 'numeric':
-        columns = data.select_dtypes(include='number').columns
-    zeros = data[data[label] == 0][columns]
-    ones = data[data[label] == 1][columns]
+    if label not in data.columns:
+        raise ValueError("Label '{}' not found in the dataset".format(label))
+    if selected_columns == 'numeric':
+        print(type(data))
+        selected_columns = data.select_dtypes(include='number').columns.drop(label)
+    zeros = data[data[label] == 0][selected_columns]
+    ones = data[data[label] == 1][selected_columns]
 
     statistics = []
     pvalues = []
 
-    for col in columns:
+    for col in selected_columns:
+        if zeros[col].isnull().any() or ones[col].isnull().any():
+            raise ValueError("Null values found in the dataset, cannot calculate the test statistic and p-value")
         res = kstest(zeros[col], ones[col])
         statistics.append(res.statistic)
         pvalues.append(res.pvalue)
 
-    return pd.DataFrame({'feature': columns, 'statistic': statistics, 'pvalue': pvalues})
+    return pd.DataFrame({'feature': selected_columns, 'statistic': statistics, 'pvalue': pvalues})
