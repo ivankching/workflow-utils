@@ -1,6 +1,6 @@
 import pandas as pd
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-from scipy.stats import kstest
+from scipy.stats import kstest, chi2_contingency
 
 
 def vif(data, exclude=None):
@@ -54,7 +54,6 @@ def kstests(data, label, selected_columns='numeric'):
     if label not in data.columns:
         raise ValueError("Label '{}' not found in the dataset".format(label))
     if selected_columns == 'numeric':
-        print(type(data))
         selected_columns = data.select_dtypes(include='number').columns.drop(label)
     zeros = data[data[label] == 0][selected_columns]
     ones = data[data[label] == 1][selected_columns]
@@ -70,3 +69,26 @@ def kstests(data, label, selected_columns='numeric'):
         pvalues.append(res.pvalue)
 
     return pd.DataFrame({'feature': selected_columns, 'statistic': statistics, 'pvalue': pvalues})
+
+
+def pearson_chi2(data, label, selected_columns='category'):
+    if label not in data.columns:
+        raise ValueError("Label '{}' not found in the dataset".format(label))
+    if selected_columns == 'category':
+        selected_columns = data.select_dtypes(include=['category', 'object']).columns
+        if label in selected_columns:
+            selected_columns = selected_columns.drop(label)
+
+
+    statistics = []
+    pvalues = []
+
+    for col in selected_columns:
+        contingency_tab = pd.crosstab(data[col], data[label])
+        chi2_res = chi2_contingency(contingency_tab)
+        statistics.append(chi2_res.statistic)
+        pvalues.append(chi2_res.pvalue)
+
+    return pd.DataFrame({'feature': selected_columns, 'statistic': statistics, 'pvalue': pvalues})
+
+    
