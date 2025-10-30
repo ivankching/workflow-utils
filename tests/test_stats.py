@@ -2,7 +2,7 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 from workflow_utils import stats
-from scipy.stats import kstest
+from scipy.stats import kstest, chi2_contingency
 import pytest
 
 
@@ -52,3 +52,16 @@ def test_kstests_with_null_values():
     })
     with pytest.raises(ValueError):
         stats.kstests(data, 'label')
+
+from workflow_utils.stats import pearson_chi2
+
+def test_pearson_chi2():
+    # Test case 1: Check if the function raises a ValueError when the label is not found in the dataset
+    data = pd.DataFrame({'label': [0, 1], 'feature': [1, 2]})
+    with pytest.raises(ValueError):
+        stats.pearson_chi2(data, 'nonexistent_label')
+
+    # Test case 2: Check if the function returns the correct result for titanic dataset
+    data = sns.load_dataset('titanic')
+    result = stats.pearson_chi2(data, 'alive')
+    assert result.shape == (6, 3)

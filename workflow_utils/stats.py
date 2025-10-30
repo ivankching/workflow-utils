@@ -71,8 +71,28 @@ def kstests(data, label, selected_columns='numeric'):
 
     return pd.DataFrame({'feature': selected_columns, 'statistic': statistics, 'pvalue': pvalues})
 
-# TODO generate docstring, add unit tests
+
 def pearson_chi2(data, label, selected_columns='category'):
+    """
+    Calculate the Pearson chi-squared test statistic and p-value for each
+    categorical feature in the dataset.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        The dataset to calculate the test statistic and p-value for.
+    label : str
+        The label to split the data into two groups.
+    selected_columns : list or str, optional
+        Either 'category' to select all categorical and object features, or a list of
+        feature names to select.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the test statistic and p-value for each
+        categorical feature in the dataset.
+    """
     if label not in data.columns:
         raise ValueError("Label '{}' not found in the dataset".format(label))
     if selected_columns == 'category':
