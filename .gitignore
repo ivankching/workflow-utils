@@ -2,5 +2,5 @@
 __pycache__
 .vscode
 .pypirc
-workflow_utils.egg-info
+workflow_utils_ic.egg-info
 dist
