@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from scipy.stats import kstest, chi2_contingency
 
@@ -70,7 +71,7 @@ def kstests(data, label, selected_columns='numeric'):
 
     return pd.DataFrame({'feature': selected_columns, 'statistic': statistics, 'pvalue': pvalues})
 
-
+# TODO generate docstring, add unit tests
 def pearson_chi2(data, label, selected_columns='category'):
     if label not in data.columns:
         raise ValueError("Label '{}' not found in the dataset".format(label))
@@ -86,8 +87,14 @@ def pearson_chi2(data, label, selected_columns='category'):
     for col in selected_columns:
         contingency_tab = pd.crosstab(data[col], data[label])
         chi2_res = chi2_contingency(contingency_tab)
-        statistics.append(chi2_res.statistic)
-        pvalues.append(chi2_res.pvalue)
+
+        # Check if all expected frequencies > 5
+        if np.any(chi2_res.expected_freq <= 5):
+            statistics.append(None)
+            pvalues.append(None)
+        else:
+            statistics.append(chi2_res.statistic)
+            pvalues.append(chi2_res.pvalue)
 
     return pd.DataFrame({'feature': selected_columns, 'statistic': statistics, 'pvalue': pvalues})
 
