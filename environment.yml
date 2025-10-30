@@ -7,4 +7,6 @@ dependencies:
   - pandas
   - matplotlib
   - seaborn
+  - scipy
+  - statsmodels
 prefix: c:\Users\ivan1\projects\workflow-utils\.conda
